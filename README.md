@@ -10,7 +10,7 @@
   <p align="center">
     Imitation Policy Learning in the Frequency Domain with Wavelet Transforms  
     <br />
-    <a href="https://www.youtube.com/watch?v=Dv1V4F4sflc">Quick-Start Demo</a>
+    <a href="https://youtu.be/WnUJzu8MQBk">Quick-Start Demo</a>
     ·
     <a href="https://arxiv.org/pdf/2504.04991">Paper</a>
     ·
@@ -136,11 +136,12 @@ python infer.py --task_name {task_name} \
                 --no_visualization {0|1}
 ```
 
-**Example** (Transfer Plus task, with visualization enabled):
+**Example：** Transfer Plus task, with visualization enabled:
 
 ```bash
 python infer.py --task_name sim_transfer_cube_scripted_plus --no_visualization 0
 ```
+ If there are still difficulties, you can refer to the demonstration video[Quick-Start Demo](https://youtu.be/WnUJzu8MQBk).
 
 Other valid values for `--task_name` are:
 
