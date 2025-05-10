@@ -1,4 +1,7 @@
-
+"""
+Author: Changchuan Yang
+Email: ccyang@zjut.edu.cn
+"""
 import pathlib
 import numpy as np
 import torch
