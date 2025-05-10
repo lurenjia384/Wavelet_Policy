@@ -1,3 +1,4 @@
+
 import pathlib
 import numpy as np
 import torch
@@ -13,7 +14,7 @@ from dm_control.rl import control
 from dm_control.suite import base
 e = IPython.embed
 
-### Task parameters
+BOX_POSE = [None] # to be changed from outside
 DATA_DIR = '/home/somebody/bak_floder/Mu/act/data'
 SIM_TASK_CONFIGS = {
     'sim_transfer_cube_scripted':{
@@ -89,6 +90,7 @@ MASTER_GRIPPER_JOINT_MID = (MASTER_GRIPPER_JOINT_OPEN + MASTER_GRIPPER_JOINT_CLO
 def cosine_similarity(arr1, arr2):
     flat1, flat2 = arr1.flatten(), arr2.flatten()  # 展平为一维向量
     return np.dot(flat1, flat2) / (norm(flat1) * norm(flat2))
+
 def sample_box_pose():
     x_range = [0.0, 0.2]
     y_range = [0.4, 0.6]
@@ -124,6 +126,7 @@ def sample_insertion_pose():
     socket_pose = np.concatenate([socket_position, socket_quat])
 
     return peg_pose, socket_pose
+
 def sample_box_pose():
     x_range = [0.0, 0.2]
     y_range = [0.4, 0.6]
@@ -145,6 +148,7 @@ def sample_box0_pose():
 
     cube_quat = np.array([1, 0, 0, 0])
     return np.concatenate([cube_position, cube_quat])
+
 def sample_box1_pose():
     x_range = [0.2, 0.1]
     y_range = [0.4, 0.5]
@@ -166,6 +170,7 @@ def sample_box2_pose():
 
     cube_quat = np.array([1, 0, 0, 0])
     return np.concatenate([cube_position, cube_quat])
+
 def get_image(ts, camera_names):
     curr_images = []
     for cam_name in camera_names:
@@ -174,7 +179,6 @@ def get_image(ts, camera_names):
     curr_image = np.stack(curr_images, axis=0)
     curr_image = torch.from_numpy(curr_image / 255.0).float().cuda().unsqueeze(0)
     return curr_image
-
 
 def save_videos(video, dt, video_path=None):
     if isinstance(video, list):
@@ -217,25 +221,7 @@ def save_videos(video, dt, video_path=None):
         out.release()
         print(f'Saved video to: {video_path}')
 
-BOX_POSE = [None] # to be changed from outside
 def make_sim_env(task_name):
-    """
-    Environment for simulated robot bi-manual manipulation, with joint position control
-    Action space:      [left_arm_qpos (6),             # absolute joint position
-                        left_gripper_positions (1),    # normalized gripper position (0: close, 1: open)
-                        right_arm_qpos (6),            # absolute joint position
-                        right_gripper_positions (1),]  # normalized gripper position (0: close, 1: open)
-
-    Observation space: {"qpos": Concat[ left_arm_qpos (6),         # absolute joint position
-                                        left_gripper_position (1),  # normalized gripper position (0: close, 1: open)
-                                        right_arm_qpos (6),         # absolute joint position
-                                        right_gripper_qpos (1)]     # normalized gripper position (0: close, 1: open)
-                        "qvel": Concat[ left_arm_qvel (6),         # absolute joint velocity (rad)
-                                        left_gripper_velocity (1),  # normalized gripper velocity (pos: opening, neg: closing)
-                                        right_arm_qvel (6),         # absolute joint velocity (rad)
-                                        right_gripper_qvel (1)]     # normalized gripper velocity (pos: opening, neg: closing)
-                        "images": {"main": (480x640x3)}        # h, w, c, dtype='uint8'
-    """
     if 'sim_transfer_cube_scripted_plus' in task_name:
         xml_path = os.path.join(XML_DIR, f'bimanual_viperx_transfer_cube_plus.xml')
         physics = mujoco.Physics.from_xml_path(xml_path)
@@ -330,7 +316,6 @@ class BimanualViperXTask(base.Task):
         # return whether left gripper is holding the box
         raise NotImplementedError
 
-
 class TransferCubeTask(BimanualViperXTask):
     def __init__(self, random=None):
         super().__init__(random=random)
@@ -384,17 +369,6 @@ class TransferCubeTask_plus(BimanualViperXTask):
         super().__init__(random=random)
         self.max_reward = 4
 
-    # def initialize_episode(self, physics):
-    #     """Sets the state of the environment at the start of each episode."""
-    #     # TODO Notice: this function does not randomize the env configuration. Instead, set BOX_POSE from outside
-    #     # reset qpos, control and box position
-    #     with physics.reset_context():
-    #         physics.named.data.qpos[:16] = START_ARM_POSE
-    #         np.copyto(physics.data.ctrl, START_ARM_POSE)
-    #         assert BOX_POSE[0] is not None
-    #         physics.named.data.qpos[-7*2:] = BOX_POSE[0]
-    #         # print(f"{BOX_POSE=}")
-    #     super().initialize_episode(physics)
     def initialize_episode(self, physics):
         """Sets the state of the environment at the start of each episode."""
         # TODO Notice: this function does not randomize the env configuration. Instead, set BOX_POSE from outside
@@ -432,8 +406,6 @@ class TransferCubeTask_plus(BimanualViperXTask):
         touch_right_gripper = ("red_box1", "vx300s_right/10_right_gripper_finger") in all_contact_pairs
         touch_box2 = ("red_box", "red_box1") in all_contact_pairs
         touch_table = ("red_box1", "table") in all_contact_pairs
-        # touch_table1 = ("red_box1", "table") in all_contact_pairs
-        
 
         reward = 0
         if touch_right_gripper:
@@ -486,7 +458,6 @@ class PutTask(BimanualViperXTask):
         touch_box1 = ("red_box1", "red_box2") in all_contact_pairs
         touch_table1 = ("red_box1", "table") in all_contact_pairs
         touch_table2 = ("red_box2", "table") in all_contact_pairs
-        # print(touch_right_gripper, touch_box2, touch_box1, touch_table1, touch_table2)
 
         reward = 0
         if touch_right_gripper or touch_right_gripper:
@@ -560,7 +531,6 @@ class InsertionTask(BimanualViperXTask):
             reward = 4
         return reward
 
-
 def get_action(master_bot_left, master_bot_right):
     action = np.zeros(14)
     # arm action
@@ -574,6 +544,3 @@ def get_action(master_bot_left, master_bot_right):
     action[6] = normalized_left_pos
     action[7+6] = normalized_right_pos
     return action
-
-
-
