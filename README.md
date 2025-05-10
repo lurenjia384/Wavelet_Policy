@@ -10,11 +10,11 @@
   <p align="center">
     Imitation Policy Learning in the Frequency Domain with Wavelet Transforms  
     <br />
+    <a href="https://www.youtube.com/watch?v=Dv1V4F4sflc">Quick-Start Demo</a>
+    ·
     <a href="https://arxiv.org/pdf/2504.04991">Paper</a>
     ·
-    <a href="https://www.youtube.com/watch?v=Dv1V4F4sflc">Quick-Start Demo (close)</a>
-    ·
-    <a href="https://www.youtube.com/watch?v=ak8riKGEG0s">Presentation Video (close)</a>
+    <a href="https://www.youtube.com/watch?v=ak8riKGEG0s">Presentation Video</a>
   </p>
 </div>
 
