@@ -1,6 +1,6 @@
 """
-Author: 
-Email: 
+Author: Changchuan Yang
+Email: ccyang@zjut.edu.cn
 """
 import torch
 from pytorch_wavelets import DWT1DForward
