@@ -93,13 +93,13 @@ Pre-trained weights and configurations are available on Hugging Face:
 | Cameras |       Dataset      | Params (M) | Download (closed)                                                                                                                |
 | :-----: | :----------------: | :--------: | :------------------------------------------------------------------------------------------------------------------------------- |
 |   One   |    Transfer Cube   |    17.22   | [best\_model\_11.pt](https://huggingface.co/lurenjia384/wavelet_policy_model/resolve/main/task_1/best_model_11.pt?download=true) |
-|   Two   |    Transfer Cube   |      —     | coming soon                                                                                                                      |
-|   One   | Bimanual Insertion |    17.22   | coming soon                                                                                                                      |
-|   Two   | Bimanual Insertion |      —     | coming soon                                                                                                                      |
+|   Two   |    Transfer Cube   |      24.41     | [best\_model\_21.pt](https://huggingface.co/lurenjia384/wavelet_policy_model/resolve/main/task_1/best_model_21.pt?download=true)                                                                                                                      |
+|   One   | Bimanual Insertion |    17.22   | [best\_model\_12.pt](https://huggingface.co/lurenjia384/wavelet_policy_model/resolve/main/task_2/best_model_12.pt?download=true)                                                                                                                      |
+|   Two   | Bimanual Insertion |      35.58     | [best\_model\_22.pt](https://huggingface.co/lurenjia384/wavelet_policy_model/resolve/main/task_2/best_model_22.pt?download=true)                                                                                                                      |
 |   One   |    Transfer Plus   |    17.22   | [best\_model\_13.pt](https://huggingface.co/lurenjia384/wavelet_policy_model/resolve/main/task_3/best_model_13.pt?download=true) |
-|   Two   |    Transfer Plus   |      —     | coming soon                                                                                                                      |
-|   One   |  Stack Two Blocks  |    17.22   | coming soon                                                                                                                      |
-|   Two   |  Stack Two Blocks  |      —     | coming soon                                                                                                                      |
+|   Two   |    Transfer Plus   |      24.41     | [best\_model\_23.pt](https://huggingface.co/lurenjia384/wavelet_policy_model/resolve/main/task_3/best_model_23.pt?download=true)                                                                                                                      |
+|   One   |  Stack Two Blocks  |    17.22   | [best\_model\_14.pt](https://huggingface.co/lurenjia384/wavelet_policy_model/resolve/main/task_4/best_model_14.pt?download=true)                                                                                                                      |
+|   Two   |  Stack Two Blocks  |      35.58     | [best\_model\_24.pt](https://huggingface.co/lurenjia384/wavelet_policy_model/resolve/main/task_4/best_model_24.pt?download=true)                                                                                                                      |
 
 After downloading, place the model files under:
 
