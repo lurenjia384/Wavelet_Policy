@@ -31,10 +31,10 @@ class Test:
                                     "sim_insertion_scripted":"task_2/best_model_" + str(opt.cam_num) + "2.pt",
                                     "sim_transfer_cube_scripted_plus":"task_3/best_model_" + str(opt.cam_num) + "3.pt",
                                     "Put":"task_4/best_model_" + str(opt.cam_num) + "4.pt"}
-        self.online_data_stats_list = {"sim_transfer_cube_scripted":"task_1/task_1.pkl", 
-                                    "sim_insertion_scripted":"task_2/task_2.pkl",
-                                    "sim_transfer_cube_scripted_plus":"task_3/task_3.pkl",
-                                    "Put":"task_4/task_4.pkl"}
+        self.online_data_stats_list = {"sim_transfer_cube_scripted":"task_1/task_" + str(opt.cam_num) + "1.pkl", 
+                                    "sim_insertion_scripted":"task_2/task_" + str(opt.cam_num) + "2.pkl",
+                                    "sim_transfer_cube_scripted_plus":"task_3/task_" + str(opt.cam_num) + "3.pkl",
+                                    "Put":"task_4/task_" + str(opt.cam_num) + "4.pkl"}
         if net is not None:
             assert next(self.net.parameters()).device == self.device
 
