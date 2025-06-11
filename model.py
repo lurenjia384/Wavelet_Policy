@@ -152,7 +152,10 @@ class FeatureExtractor(nn.Module):
         # x_oth = x_oth.permute(1, 0, 2) 
         return x, x
     def change2x2(self, x):
-        x = self.conv_layers(x)
+        if hasattr(self, 'conv_layers1'):
+            x = self.conv_layers1(x)
+        else:
+            x = self.conv_layers(x)
         x = self.position_encoding(x)
         x = x.view(x.shape[0], 512, -1) 
         x = x.transpose(1, 2)

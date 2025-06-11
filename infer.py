@@ -14,7 +14,7 @@ import pickle
 import threading
 import matplotlib.pyplot as plt
 from utils import make_sim_env, BOX_POSE, sample_box0_pose, sample_box1_pose, sample_box_pose,\
-      sample_insertion_pose, sample_box2_pose, cosine_similarity, save_videos, get_image
+      sample_insertion_pose, sample_box2_pose, sample_box1Put_pose, cosine_similarity, save_videos, get_image
 
 tt=1
 
@@ -81,6 +81,20 @@ class Test:
         num_success = 0
         error = 0
         change = None
+        if opt.netdir is None:
+            from huggingface_hub import hf_hub_download
+            stats_path = hf_hub_download(
+                repo_id="lurenjia384/wavelet_policy_model", 
+                filename= self.online_data_stats_list[opt.task_name]
+                )
+        else :
+            stats_path = opt.stats_path
+        with open(stats_path,  'rb') as f:
+            stats = pickle.load(f)
+        pre_process = lambda s_qpos: (s_qpos - stats['qpos_mean']) / stats['qpos_std']
+        post_process = lambda a: a * stats['action_std'] + stats['action_mean']
+        idwt = DWT1DInverse(wave=self.net.args['train_opt'].wavelet, mode=self.net.args['train_opt'].wt_mode).cuda()
+
         for rollout_id in range(num_rollouts):
             rollout_id += 0
             if tt==0:
@@ -88,18 +102,6 @@ class Test:
                 plt_img = ax.imshow(env._physics.render(height=480, width=640, camera_id=onscreen_cam))
                 plt.ion()
             
-            if opt.netdir is None:
-                from huggingface_hub import hf_hub_download
-                stats_path = hf_hub_download(
-                    repo_id="lurenjia384/wavelet_policy_model", 
-                    filename= self.online_data_stats_list[opt.task_name]
-                    )
-            else :
-                stats_path = opt.stats_path
-            with open(stats_path,  'rb') as f:
-                stats = pickle.load(f)
-            pre_process = lambda s_qpos: (s_qpos - stats['qpos_mean']) / stats['qpos_std']
-            post_process = lambda a: a * stats['action_std'] + stats['action_mean']
             last_action=[]
             rewards = []
             image_list=[]
@@ -111,7 +113,7 @@ class Test:
                 elif 'sim_insertion' in task_name:
                     BOX_POSE[0] = np.concatenate(sample_insertion_pose()) 
                 elif 'Put' in task_name:
-                    BOX_POSE[0] = np.concatenate([sample_box0_pose(), sample_box1_pose(), sample_box2_pose()])
+                    BOX_POSE[0] = np.concatenate([sample_box0_pose(), sample_box1Put_pose(), sample_box2_pose()])
                 ts = env.reset()
                 warn = 0
                 for t in range(600):
@@ -126,7 +128,6 @@ class Test:
                     else:
                         image_list.append({'main': obs['image']})
                     icurr_image = get_image(ts, camera_names)
-                    idwt = DWT1DInverse(wave=self.net.args['train_opt'].wavelet, mode=self.net.args['train_opt'].wt_mode).cuda()
                     img=icurr_image.to('cuda')
                     qpos_numpy = np.array(obs['qpos'])
                     qpos = pre_process(qpos_numpy)
@@ -212,7 +213,7 @@ if __name__ == '__main__':
     parser.add_argument('--netdir', default=None, type=str)
     parser.add_argument('--no_visualization', default=1, type=int)
     parser.add_argument('--cam_num', default=1, type=int)
-    parser.add_argument('--stop_time', default=0.4, type=float, help="This value is recommended to be 3.5 in the task of insertion if the robotic arm is stuck or if there are idle segments in the dataset.")
+    parser.add_argument('--stop_time', default=0.001, type=float, help="This value is recommended to be 3.5 in the task of insertion if the robotic arm is stuck or if there are idle segments in the dataset.")
     parser.add_argument('--exit_num', default= 50, type=int)
     parser.add_argument('--task_name', default="sim_transfer_cube_scripted_plus", type=str)
     parser.add_argument('--stats_path', default="dataset_stats.pkl", type=str)

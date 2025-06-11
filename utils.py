@@ -174,6 +174,17 @@ def sample_box2_pose():
     cube_quat = np.array([1, 0, 0, 0])
     return np.concatenate([cube_position, cube_quat])
 
+def sample_box1Put_pose():
+    x_range = [-0.2, -0.1]
+    y_range = [0.4, 0.5]
+    z_range = [0.05, 0.05]
+
+    ranges = np.vstack([x_range, y_range, z_range])
+    cube_position = np.random.uniform(ranges[:, 0], ranges[:, 1])
+
+    cube_quat = np.array([1, 0, 0, 0])
+    return np.concatenate([cube_position, cube_quat])
+
 def get_image(ts, camera_names):
     curr_images = []
     for cam_name in camera_names:
